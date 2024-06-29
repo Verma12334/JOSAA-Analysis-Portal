@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+        h1 {
+            color: blue;
+            background-color: lightblue;
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .padding-example {
+            padding-left: 170px;
+            padding-right: 100px;
+        }
+
+        .card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #ddd;
+          border-radius: 15px;
+          padding: 20px;
+          background-color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s, box-shadow 0.2s;
+          width: 250px;
+      }
+        .dropdown {
+            height: 25px;
+            width: 190px;
+            font-size: 16px;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .result-table th, .result-table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .result-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        #resultContainer {
+            margin-top: 20px;
+        }
+        .container {
+          padding: 30px;
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 20px;
+      }
+    </style>
+    <title>JoSAA</title>
+    <script>
+        function showProgramnameDropdown() {
+            var rank = document.getElementById("rank").value;
+            var programnameDropdown = document.getElementById("programnameDropdown");
+
+            if (rank !== "") {
+                programnameDropdown.style.display = "inline-block";
+            } else {
+                programnameDropdown.style.display = "none";
+            }
+        }
+
+        function update(rank, programname) {
+            const xhr = new XMLHttpRequest();
+            const url = `/get-knowiit/?rank=${rank}&programname=${programname}`;
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    const responseData = JSON.parse(xhr.responseText);
+                    renderdata(responseData);
+                }
+            };
+            xhr.send();
+        }
+
+        function renderdata(data) {
+            var resultContainer = document.getElementById("resultContainer");
+            resultContainer.innerHTML = "";
+
+            var table = document.createElement("table");
+            table.classList.add("result-table");
+
+            var thead = document.createElement("thead");
+            var headerRow = document.createElement("tr");
+            var headerCells = ["Institute", "Program Name", "Opening Rank", "Closing Rank"];
+            headerCells.forEach(cellText => {
+                var headerCell = document.createElement("th");
+                headerCell.textContent = cellText;
+                headerRow.appendChild(headerCell);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            var tbody = document.createElement("tbody");
+            data.forEach(item => {
+                var row = document.createElement("tr");
+                var cells = [item.Institute, item.Program_name, item.Opening_rank, item.Closing_rank];
+                cells.forEach(cellText => {
+                    var cell = document.createElement("td");
+                    cell.textContent = cellText;
+                    row.appendChild(cell);
+                });
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+
+            resultContainer.appendChild(table);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const rank = document.getElementById('rank');
+            const Prog_name = document.getElementById('programname');
+
+            rank.addEventListener('input', showProgramnameDropdown);
+            Prog_name.addEventListener('change', function () {
+                const rank_val = rank.value;
+                const Prog_val = Prog_name.value;
+                update(rank_val, Prog_val);
+            });
+        });
+    </script>
+</head>
+<body>
+  <div class="header">
+    <h1>Welcome</h1>
+  </div>
+    <hr/>
+    <h2>Want to know your IIT based on last year? Enter your Rank to find out!</h2>
+  <div class="container">
+    <div class="padding-example">
+        <div class="card">
+            <label for="rank">Rank</label>
+            <input type="text" id="rank" name="rank" class="dropdown">
+        </div>
+        <br>
+
+        <div class="card" id="programnameDropdown" style="display: none;">
+            <label for="programname">Program Name</label>
+            <select id="programname" name="Programname" class="dropdown">
+                <option value="">Select a program</option>
+                <option value="CivilEngineering">Civil Engineering</option>
+                <option value="ComputerScienceandEngineering">Computer Science and Engineering</option>
+                <option value="ElectricalEngineering">Electrical Engineering</option>
+                <option value="ElectronicsandCommunicationEngineering">Electronics and Communication Engineering</option>
+                <option value="MechanicalEngineering">Mechanical Engineering</option>
+                <option value="MetallurgicalandMaterialsEngineering">Metallurgical and Materials Engineering</option>
+                <option value="AerospaceEngineering">Aerospace Engineering</option>
+                <option value="ChemicalEngineering">Chemical Engineering</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="EngineeringPhysics">Engineering Physics</option>
+                <option value="MetallurgicalEngineeringandMaterialsScience">Metallurgical Engineering and Materials Science</option>
+                <option value="BiochemicalEngineeringandBiotechnology">Biochemical Engineering and Biotechnology</option>
+                <option value="BiotechnologyandBiochemicalEngineering">Biotechnology and Biochemical Engineering</option>
+                <option value="MathematicsandComputing">Mathematics and Computing</option>
+                <option value="ProductionandIndustrialEngineering">Production and Industrial Engineering</option>
+                <option value="TextileTechnology">Textile Technology</option>
+                <option value="AgriculturalandFoodEngineering">Agricultural and Food Engineering</option>
+                <option value="AppliedGeology">Applied Geology</option>
+                <option value="Architecture">Architecture</option>
+                <option value="CivilEngineeringwithanyofthelistedspecialization">Civil Engineering with any of the listed specialization</option>
+                <option value="Economics">Economics</option>
+                <option value="ElectronicsandElectricalCommunicationEngineering">Electronics and Electrical Communication Engineering</option>
+                <option value="ExplorationGeophysics">Exploration Geophysics</option>
+                <option value="IndustrialandSystemsEngineering">Industrial and Systems Engineering</option>
+                <option value="InstrumentationEngineering">Instrumentation Engineering</option>
+                <option value="ManufacturingScienceandEngineering">Manufacturing Science and Engineering</option>
+                <option value="MiningEngineering">Mining Engineering</option>
+                <option value="MiningSafetyEngineering">Mining Safety Engineering</option>
+                <option value="OceanEngineeringandNavalArchitecture">Ocean Engineering and Naval Architecture</option>
+                <option value="Physics">Physics</option>
+                <option value="QualityEngineeringDesignandManufacturing">Quality Engineering Design and Manufacturing</option>
+                <option value="EngineeringScience">Engineering Science</option>
+                <option value="MaterialsScienceandMetallurgicalEngineering">Materials Science and Metallurgical Engineering</option>
+                <option value="BiologicalSciencesandBioengineering">Biological Sciences and Bioengineering</option>
+                <option value="EarthSciences">Earth Sciences</option>
+                <option value="MaterialsScienceandEngineering">Materials Science and Engineering</option>
+                <option value="MathematicsandScientificComputing">Mathematics and Scientific Computing</option>
+                <option value="BiologicalEngineering">Biological Engineering</option>
+                <option value="BiologicalSciences">Biological Sciences</option>
+                <option value="EngineeringDesign">Engineering Design</option>
+                <option value="NavalArchitectureandOceanEngineering">Naval Architecture and Ocean Engineering</option>
+                <option value="AppliedMathematics">Applied Mathematics</option>
+                <option value="BioTechnology">Bio Technology</option>
+                <option value="GeologicalTechnology">Geological Technology</option>
+                <option value="GeophysicalTechnology">Geophysical Technology</option>
+                <option value="PolymerScienceandEngineering">Polymer Science and Engineering</option>
+                <option value="AppliedGeophysics">Applied Geophysics</option>
+                <option value="ElectronicsandInstrumentationEngineering">Electronics and Instrumentation Engineering</option>
+                <option value="EnvironmentalEngineering">Environmental Engineering</option>
+                <option value="MineralEngineering">Mineral Engineering</option>
+                <option value="MiningMachineryEngineering">Mining Machinery Engineering</option>
+                <option value="PetroleumEngineering">Petroleum Engineering</option>
+                <option value="CeramicEngineering">Ceramic Engineering</option>
+                <option value="ElectronicsEngineering">Electronics Engineering</option>
+                <option value="IndustrialChemistry">Industrial Chemistry</option>
+                <option value="MaterialsScienceandTechnology">Materials Science and Technology</option>
+                <option value="MetallurgicalEngineering">Metallurgical Engineering</option>
+                <option value="Pharmaceutics">Pharmaceutics</option>
+                <option value="ChemicalScienceandTechnology">Chemical Science and Technology</option>
+                <option value="ElectronicsandElectricalEngineering">Electronics and Electrical Engineering</option>
+                <option value="PharmaceuticalEngineering&Tech">Pharmaceutical Engineering & Technology</option>
+                <option value="BSinMathematics">BS in Mathematics</option>
+                <option value="EnvironmentalScienceandEngineering">Environmental Science and Engineering</option>
+                <option value="MetallurgicalEngineering&MaterialsScience">Metallurgical Engineering & Materials Science</option>
+                <option value="BioEngineering">Bio Engineering</option>
+                <option value="DataScienceandEngineering">Data Science and Engineering</option>
+                <option value="ArtificialIntelligence">Artificial Intelligence</option>
+                <option value="ElectricalandElectronicsEngineering">Electrical and Electronics Engineering</option>
+                <option value="EngineeringandComputationalMechanics">Engineering and Computational Mechanics</option>
+                <option value="MaterialsEngineering">Materials Engineering</option>
+                <option value="BiomedicalEngineering">Biomedical Engineering</option>
+                <option value="ArtificialIntelligenceandDataScience">Artificial Intelligence and Data Science</option>
+                <option value="CivilandInfrastructureEngineering">Civil and Infrastructure Engineering</option>
+                <option value="MineralandMetallurgicalEngineering">Mineral and Metallurgical Engineering</option>
+                <option value="BiosciencesandBioengineering">Biosciences and Bioengineering</option>
+                <option value="DataScienceandArtificialIntelligence">Data Science and Artificial Intelligence</option>
+                <option value="EnergyEngineering">Energy Engineering</option>
+                <option value="BiotechnologyandBioinformatics">Biotechnology and Bioinformatics</option>
+                <option value="ComputationalEngineering">Computational Engineering</option>
+                <option value="StatisticsandDataScience">Statistics and Data Science</option>
+                <option value="ChemicalSciences">Chemical Sciences</option>
+                <option value="ChemistrywithSpecialization">Chemistry with Specialization</option>
+                <option value="PhysicswithSpecialization">Physics with Specialization</option>
+                <option value="MechatronicsEngineering">Mechatronics Engineering</option>
+                <option value="ChemicalandBiochemicalEngineering">Chemical and Biochemical Engineering</option>
+                <option value="InterdisciplinarySciences">Interdisciplinary Sciences</option>
+            </select>
+        </div>
+
+        <div id="resultContainer"></div>
+
+        <div>
+            <canvas id="myChart" width="300" height="500"></canvas>
+        </div>
+    </div>
+  </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+</body>
+</html>

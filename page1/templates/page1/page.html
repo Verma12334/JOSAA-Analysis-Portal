@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoSAA</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Center Alignment */
+        .center {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Header Styles */
+        h1 {
+            font-size: 60px;
+            color: #4CAF50;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Info Paragraph */
+        .info {
+            font-size: 20px;
+            line-height: 1.5;
+            color: #ffc107;
+            margin-bottom: 50px;
+        }
+
+        /* Rectangle Styling */
+        .rectangle {
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: #333;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            width: calc(20% - 20px); /* 20% width with 20px margin-right */
+            margin-right: 20px;
+            vertical-align: top;
+        }
+
+        .rectangle:last-child {
+            margin-right: 0;
+        }
+
+        .rectangle:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Button Link */
+        .b_h a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+
+        .b_h a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Cutoff Analysis</h1>
+        <p class="info">Welcome. Here we analyze cutoff trends for IIT's.</p>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <div class="rectangle">
+            <h2>Analyze trends based on year</h2>
+            <p class="info">Discover the year-wise cutoff variations and delve into valuable insights on admission trends.</p>
+            <div class="b_h"><a href="YearWise.html">Get Started →</a></div>
+        </div>
+
+        <div class="rectangle">
+            <h2>Analyze trends based on Round</h2>
+            <p class="info">Analyze trends based on round-wise cutoffs for years.</p>
+            <div class="b_h"><a href="Roundwise.html">Get Started →</a></div>
+        </div>
+
+        <div class="rectangle">
+            <h2>Best Institutes for Courses</h2>
+            <p class="info">Find the best IIT for a selected course based on last year's data.</p>
+            <div class="b_h"><a href="BestCourses.html">Get Started →</a></div>
+        </div>
+
+        <div class="rectangle">
+            <h2>Know Your IIT</h2>
+            <p class="info">Explore your IIT possibilities with last year's cutoffs, revealing the institution that could be your future!</p>
+            <div class="b_h"><a href="Knowiit.html">Get Started →</a></div>
+        </div>
+
+        <div class="rectangle">
+            <h2>Ideal Preferences</h2>
+            <p class="info">Don't know your IIT preferences? Let me help you based on last year's data and your current rank.</p>
+            <div class="b_h"><a href="preferences.html">Get Started →</a></div>
+        </div>
+    </div>
+</body>
+</html>

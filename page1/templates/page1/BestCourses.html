@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.header {
+    background-color: #008080;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 36px;
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    margin: 20px 0;
+}
+
+.container {
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 250px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+label {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.dropdown {
+    height: 35px;
+    width: 220px;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.dropdown:focus {
+    border-color: #008080;
+    outline: none;
+}
+
+.result-table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result-table th,
+.result-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.result-table th {
+    background-color: #008080;
+    color: #fff;
+    font-weight: bold;
+}
+
+.result-table th,
+.result-table td {
+    text-align: center;
+}
+
+.result-table th:last-child,
+.result-table td:last-child {
+    border-right: none;
+}
+
+.result-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+#resultContainer {
+    margin: 20px 0;
+    padding: 0 30px;
+}
+
+canvas {
+    display: block;
+    margin: 30px auto;
+}
+</style>
+<title>JoSAA</title>
+<script>
+function showProgramnameDropdown(programtypeDropdown) {
+    const year = programtypeDropdown.value;
+    const programnameDropdown = document.getElementById("programname");
+    programnameDropdown.innerHTML = "";
+
+    const option = document.createElement("option");
+    option.value = "";
+    option.text = "Select Program";
+    option.style.fontSize = '20px';
+    programnameDropdown.appendChild(option);
+
+    const xhr = new XMLHttpRequest();
+    const url = `/get-yearwise/?year=${year}`;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            const responseData = JSON.parse(xhr.responseText);
+            responseData.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item['Program_name'];
+                option.text = item['Program_name'];
+                option.style.fontSize = '20px';
+                programnameDropdown.appendChild(option);
+            });
+        }
+    };
+    xhr.send();
+}
+
+function update(year, programname) {
+    const xhr = new XMLHttpRequest();
+    const url = `/get-bestcourse/?year=${year}&programname=${programname}`;
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            const responseData = JSON.parse(xhr.responseText);
+            renderdata(responseData);
+        }
+    };
+    xhr.send();
+}
+
+function renderdata(data) {
+    const resultContainer = document.getElementById("resultContainer");
+    resultContainer.innerHTML = "";
+
+    const table = document.createElement("table");
+    table.classList.add("result-table");
+
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    const headerCells = ["Institute", "Program Name", "Opening Rank", "Closing Rank"];
+    headerCells.forEach(cellText => {
+        const headerCell = document.createElement("th");
+        headerCell.textContent = cellText;
+        headerRow.appendChild(headerCell);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    data.forEach(item => {
+        const row = document.createElement("tr");
+        const cells = [item.Institute, item.Program_name, item.Opening_rank, item.Closing_rank];
+        cells.forEach(cellText => {
+            const cell = document.createElement("td");
+            cell.textContent = cellText;
+            row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    resultContainer.appendChild(table);
+}
+</script>
+</head>
+<body>
+<div class="header">
+    <h1>Welcome</h1>
+</div>
+<h2>Let's Explore the Best Institute for Every Course for a Given Year!</h2>
+
+<div class="container">
+    <div class="card" id="yearDropdown">
+        <label for="year">Year</label>
+        <select id="year" name="Year" class="dropdown" onchange="showProgramnameDropdown(this)">
+            <option value="">Select a year</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+        </select>
+    </div>
+
+    <div class="card" id="programnameDropdown">
+        <label for="programname">Program Name</label>
+        <select id="programname" name="Programname" class="dropdown">
+            <option value="">Select a program</option>
+        </select>
+    </div>
+</div>
+
+<div id="resultContainer"></div>
+
+<script>
+    const year = document.getElementById('year');
+    const Prog_name = document.getElementById('programname');
+
+    Prog_name.addEventListener('change', function() {
+        const year_val = year.value;
+        const Prog_val = Prog_name.value;
+        update(year_val, Prog_val);
+    });
+</script>
+
+<canvas id="myChart" width="300" height="500"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>

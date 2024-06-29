@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header {
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .title {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+    
+    .subtitle {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .selectBox {
+        margin-bottom: 20px;
+    }
+    
+    .rectangle {
+        display: inline-block;
+        border: 1px solid #ccc;
+        margin-right: 20px;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .dropdown {
+        height: 40px;
+        width: 200px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    
+    .chart-container {
+        margin-top: 20px;
+    }
+    
+    .canvas-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 75%;
+    }
+    
+    .canvas-container canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        width: 250px;
+    }
+</style>
+<title>JoSAA</title>
+<script>
+
+
+function showInstituteDropdown(roundDropdown) {
+    
+    const round = roundDropdown.value;
+    
+    var instituteDropdown = document.getElementById("instituteDropdown");
+    var institute = document.getElementById("institute");
+
+    if (roundDropdown.value !== "") {
+        instituteDropdown.style.display = "inline-block";
+    } else {
+        instituteDropdown.style.display = "none";
+    }
+    institute.innerHTML = "";
+    var option = document.createElement("option");
+    option.value = "";
+    option.text = "Select Program";
+    option.style.fontSize = '20px';
+    institute.appendChild(option);
+    
+      const xhr = new XMLHttpRequest();
+      const url = `/get-roundwise-institute/?round=${round}`;
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const responseData = JSON.parse(xhr.responseText);
+              
+              for (var i = 0; i < responseData.length; i++) {
+                var option = document.createElement("option");
+                option.value = responseData[i]['Institute'];
+                option.text = responseData[i]['Institute'];
+                option.style.fontSize = '20px';
+                institute.appendChild(option);
+              }
+              
+              
+          }
+      };
+      xhr.send();
+}
+
+function showProgramnameDropdown(programtypeDropdown) {
+    const iit = programtypeDropdown.value;
+    var programnameDropdown = document.getElementById("programname");
+    var disp = document.getElementById("programnameDropdown");
+    const Round = document.getElementById('round');
+    const round = Round.value;
+    if (programtypeDropdown.value !== "") {
+        disp.style.display = "inline-block";
+    } else {
+        disp.style.display = "none";
+    }
+    
+        programnameDropdown.innerHTML = "";
+        var option = document.createElement("option");
+        option.value = "";
+        option.text = "Select Program";
+        option.style.fontSize = '20px';
+        programnameDropdown.appendChild(option);
+        
+      const xhr = new XMLHttpRequest();
+      const url = `/get-roundwise-name/?iit=${iit}&round=${round}`;
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const responseData = JSON.parse(xhr.responseText);
+              
+              for (var i = 0; i < responseData.length; i++) {
+                var option = document.createElement("option");
+                option.value = responseData[i]['Program_name'];
+                option.text = responseData[i]['Program_name'];
+                option.style.fontSize = '20px';
+                programnameDropdown.appendChild(option);
+              }
+              
+              
+          }
+      };
+      xhr.send();
+  }
+
+function showProgramtypeDropdown(prog_nameDropdown) {
+    const prog_name = prog_nameDropdown.value;
+    const Round = document.getElementById('round');
+    const IIT = document.getElementById('institute');
+    const round = Round.value;
+    const iit = IIT.value;
+    
+    var programtypeDropdown = document.getElementById("programtype");
+    var disp = document.getElementById("programtypeDropdown");
+
+    if (prog_nameDropdown.value !== "") {
+        disp.style.display = "inline-block";
+    } else {
+        disp.style.display = "none";
+    }
+
+    programtypeDropdown.innerHTML = "";
+    var option = document.createElement("option");
+    option.value = "";
+    option.text = "Select Program";
+    option.style.fontSize = '20px';
+    programtype.appendChild(option);
+    
+      const xhr = new XMLHttpRequest();
+      const url = `/get-roundwise-type/?prog_name=${prog_name}&round=${round}&iit=${iit}`;
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const responseData = JSON.parse(xhr.responseText);
+              
+              for (var i = 0; i < responseData.length; i++) {
+                var option = document.createElement("option");
+                option.value = responseData[i]['Program_type'];
+                option.text = responseData[i]['Program_type'];
+                option.style.fontSize = '20px';
+                programtypeDropdown.appendChild(option);
+              }
+              
+              
+          }
+      };
+      xhr.send();
+}
+
+</script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="title">Welcome</h1>
+        <p class="subtitle">Here we analyze Round wise trend for every year</p>
+    </div>
+
+<div class="padding-example">
+    
+    <div class="card">
+    
+        <label for="round">Round</label>
+        <div class="selectBox">
+        <select id="round" name="Round" class="dropdown" onchange="showInstituteDropdown(this)">
+            <option value="">Select a round</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+        </div>
+    </div>
+
+
+    <div class="card" id="instituteDropdown" style="display: none;">
+        <label for="institute">Institute</label>
+        <br>
+        <select id="institute" name="Institute" class="dropdown" onchange="showProgramnameDropdown(this)">
+            
+        </select>
+    </div>
+    
+    <div class="card" id="programnameDropdown" style="display: none;">
+        <label for="programname">Program Name</label>
+        <br>
+        <select id="programname" name="Programname" class="dropdown" onchange="showProgramtypeDropdown(this)">
+          
+        </select>
+
+    </div>
+    
+    
+    
+    <div class="card" id="programtypeDropdown" style="display: none;">
+        <label for="programtype">Program Type</label>
+        <br>
+        <select id="programtype" name="Programtype" class="dropdown" >
+            
+           
+        </select>
+    </div>
+    
+    
+    
+    <div class="chart-container">
+      <canvas id="myChart" width="300" height="450"></canvas>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    
+    <script>
+      
+      let myChart = null;
+      
+      
+      const Round = document.getElementById('round');
+      const IIT = document.getElementById('institute');
+      const Prog_name = document.getElementById('programname');
+      const Prog = document.getElementById('programtype');
+      Prog.addEventListener('change',selection);
+      function selection() {
+          const R_val = Round.value;
+          const IIT_val = IIT.value;
+          const prog_val = Prog.value;
+          const prog_name = Prog_name.value;
+          updateGraph(R_val,IIT_val,prog_name,prog_val);
+          
+        };
+        
+        
+        function updateGraph(round, iit,programname,programtype) {
+            
+            const xhr = new XMLHttpRequest();
+            const url = `/get-graph-data-roundwise/?round=${round}&iit=${iit}&programname=${programname}&programtype=${programtype}`;
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    const responseData = JSON.parse(xhr.responseText);
+                    renderGraph(responseData);
+                }
+            };
+            xhr.send();
+        }
+        
+        function renderGraph(data) {
+        
+            
+            const labels = []; // Array to store labels
+            const values = []; 
+            
+        
+            // Extract labels and values from the data
+            for (const item of data) {
+                labels.push(item.Year);
+                values.push(item.Closing_rank);
+            }
+            
+            
+            // Create a Chart.js line chart
+               const ctx = document.getElementById('myChart').getContext('2d');
+               
+               if (myChart != null){
+                   myChart.destroy();
+               }
+               
+               myChart = new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                     labels: labels,
+                     datasets: [{
+                        label: 'Closing Rank',
+                        data: values,
+                        borderColor: 'blue',
+                        fill: false
+                        
+                     }]
+                  },
+                  options: {
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     scales: {
+                        x: {
+                           display: true,
+                           title: {
+                              display: true,
+                              text: 'Year',
+                              font:{
+                                  size: 18
+                              }
+                            },
+                            ticks:{
+                                font:{
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                           display: true,
+                           title: {
+                              display: true,
+                              text: 'Closing Rank',
+                              font:{
+                                  size: 18
+                              }
+                            },
+                            ticks:{
+                                font:{
+                                    size: 14
+                                }
+                            }
+                        }
+                     },
+                     plugins: {
+                        legend: {
+                           display: true,
+                           labels: {
+                              font: {
+                                 size: 18
+                              }
+                           }
+                        }
+                     },
+                     layout: {
+                        padding: {
+                           top: 20,
+                           right: 20,
+                           bottom: 20,
+                           left: 20
+                        }
+                     }
+                  }
+                  
+            
+               });
+
+        }
+
+
+
+    </script>
+</div>
+</div>
+</body>
+</html>

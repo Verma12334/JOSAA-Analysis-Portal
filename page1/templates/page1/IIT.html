@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-color: #f5f5f5;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+header {
+    background-color: #004d99;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 36px;
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+    color: #004d99;
+    font-size: 28px;
+    margin: 20px 0;
+}
+
+.rectangle-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.rectangle {
+    display: inline-block;
+    border: 1px solid #004d99;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #ffffff;
+    font-size: 16px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rectangle:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.rectangle-content {
+    margin-top: 10px;
+}
+
+.rectangle-link {
+    text-decoration: none;
+    color: #004d99;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.rectangle-link:hover {
+    color: #002d66;
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 250px;
+}
+</style>
+<title>JoSAA</title>
+</head>
+<body>
+<header>
+    <h1>Welcome</h1>
+</header>
+<h2>Here we analyze the Cutoff and ORCR for JoSAA Counseling</h2>
+<div class="card" id="rectangle-container"></div>
+<script>
+var rectangleList = [
+    'Indian Institute of Technology Bhubaneswar',
+    'Indian Institute of Technology Bombay',
+    'Indian Institute of Technology Mandi',
+    'Indian Institute of Technology Delhi',
+    'Indian Institute of Technology Indore',
+    'Indian Institute of Technology Kharagpur',
+    'Indian Institute of Technology Hyderabad',
+    'Indian Institute of Technology Jodhpur',
+    'Indian Institute of Technology Kanpur',
+    'Indian Institute of Technology Madras',
+    'Indian Institute of Technology Gandhinagar',
+    'Indian Institute of Technology Patna',
+    'Indian Institute of Technology Roorkee',
+    'Indian School of Mines Dhanbad',
+    'Indian Institute of Technology Ropar',
+    'Indian Institute of Technology (BHU) Varanasi',
+    'Indian Institute of Technology Guwahati',
+    'Indian Institute of Technology Bhilai',
+    'Indian Institute of Technology Goa',
+    'Indian Institute of Technology Palakkad',
+    'Indian Institute of Technology Tirupati',
+    'Indian Institute of Technology Jammu',
+    'Indian Institute of Technology Dharwad'
+];
+var container = document.getElementById("rectangle-container");
+for (var i = 0; i < rectangleList.length; i++) {
+    // Create a new div element for each rectangle
+    var rectangle = document.createElement("div");
+    rectangle.className = "rectangle";
+
+    var contentDiv = document.createElement("div");
+    contentDiv.className = "rectangle-content";
+
+    var link = document.createElement("a");
+    link.className = "rectangle-link";
+    link.href = "#" + rectangleList[i].replace(/\s/g, "-");
+    link.textContent = rectangleList[i];
+
+    // Append the link to the content div
+    contentDiv.appendChild(link);
+
+    // Append the content div to the rectangle
+    rectangle.appendChild(contentDiv);
+
+    // Append the rectangle to the container
+    container.appendChild(rectangle);
+}
+</script>
+</body>
+</html>

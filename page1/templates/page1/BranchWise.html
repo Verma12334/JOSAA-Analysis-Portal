@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	body {
+		background-color: #f8f9fa;
+		font-family: 'Arial', sans-serif;
+		margin: 0;
+		padding: 0;
+		color: #333;
+	}
+	
+	.header {
+		background-color: #008080;
+		color: #fff;
+		padding: 20px 0;
+		text-align: center;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+	
+	h1 {
+		font-size: 36px;
+		margin: 0;
+	}
+	
+	h2 {
+		text-align: center;
+		color: #333;
+		font-size: 28px;
+		margin: 20px 0;
+	}
+	
+	.container {
+		padding: 30px;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+	
+	.card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #ddd;
+		border-radius: 15px;
+		padding: 20px;
+		background-color: #fff;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		transition: transform 0.2s, box-shadow 0.2s;
+		width: 250px;
+	}
+	
+	.card:hover {
+		transform: translateY(-10px);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	}
+	
+	label {
+		font-size: 20px;
+		margin-bottom: 10px;
+	}
+	
+	.dropdown {
+		height: 35px;
+		width: 220px;
+		font-size: 18px;
+		padding: 5px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+		transition: border-color 0.3s;
+	}
+	
+	.dropdown:focus {
+		border-color: #008080;
+		outline: none;
+	}
+	
+	.result-table {
+		width: 90%;
+		margin: 20px auto;
+		border-collapse: collapse;
+		border: 1px solid #ddd;
+		background-color: #fff;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+	
+	.result-table th,
+	.result-table td {
+		padding: 12px;
+		text-align: left;
+		border-bottom: 1px solid #ddd;
+	}
+	
+	.result-table th {
+		background-color: #008080;
+		color: #fff;
+		font-weight: bold;
+	}
+	
+	.result-table th,
+	.result-table td {
+		text-align: center;
+	}
+	
+	.result-table th:last-child,
+	.result-table td:last-child {
+		border-right: none;
+	}
+	
+	.result-table tr:hover {
+		background-color: #f1f1f1;
+	}
+	
+	#resultContainer {
+		margin: 20px 0;
+		padding: 0 30px;
+	}
+	
+	canvas {
+		display: block;
+		margin: 30px auto;
+	}
+</style>
+<title>JoSAA</title>
+</head>
+<body>
+<header>
+    <h1>Welcome</h1>
+</header>
+<h2>Here we analyze the Cutoff and ORCR for JoSAA Counseling</h2>
+<div class="card" id="rectangle-container"></div>
+<script>
+var rectangleList = [
+    'Indian Institute of Technology Bhubaneswar',
+    'Indian Institute of Technology Bombay',
+    'Indian Institute of Technology Mandi',
+    'Indian Institute of Technology Delhi',
+    'Indian Institute of Technology Indore',
+    'Indian Institute of Technology Kharagpur',
+    'Indian Institute of Technology Hyderabad',
+    'Indian Institute of Technology Jodhpur',
+    'Indian Institute of Technology Kanpur',
+    'Indian Institute of Technology Madras',
+    'Indian Institute of Technology Gandhinagar',
+    'Indian Institute of Technology Patna',
+    'Indian Institute of Technology Roorkee',
+    'Indian School of Mines Dhanbad',
+    'Indian Institute of Technology Ropar',
+    'Indian Institute of Technology (BHU) Varanasi',
+    'Indian Institute of Technology Guwahati',
+    'Indian Institute of Technology Bhilai',
+    'Indian Institute of Technology Goa',
+    'Indian Institute of Technology Palakkad',
+    'Indian Institute of Technology Tirupati',
+    'Indian Institute of Technology Jammu',
+    'Indian Institute of Technology Dharwad',
+    'Dr. B R Ambedkar National Institute of Technology, Jalandhar',
+    'Malaviya National Institute of Technology Jaipur',
+    'Maulana Azad National Institute of Technology Bhopal',
+    'Motilal Nehru National Institute of Technology Allahabad',
+    'National Institute of Technology Agartala',
+    'National Institute of Technology Calicut',
+    'National Institute of Technology Delhi',
+    'National Institute of Technology Durgapur',
+    'National Institute of Technology Goa',
+    'National Institute of Technology Hamirpur',
+    'National Institute of Technology Karnataka, Surathkal',
+    'National Institute of Technology Meghalaya',
+    'National Institute of Technology Nagaland',
+    'National Institute of Technology Patna',
+    'National Institute of Technology Puducherry',
+    'National Institute of Technology Raipur',
+    'National Institute of Technology Sikkim',
+    'National Institute of Technology Arunachal Pradesh',
+    'National Institute of Technology, Jamshedpur',
+    'National Institute of Technology, Kurukshetra',
+    'National Institute of Technology, Manipur',
+    'National Institute of Technology, Mizoram',
+    'National Institute of Technology, Rourkela',
+    'National Institute of Technology, Silchar',
+    'National Institute of Technology, Srinagar',
+    'National Institute of Technology, Tiruchirappalli',
+    'National Institute of Technology, Uttarakhand',
+    'National Institute of Technology, Warangal',
+    'Sardar Vallabhbhai National Institute of Technology, Surat',
+    'Visvesvaraya National Institute of Technology, Nagpur',
+    'National Institute of Technology, Andhra Pradesh',
+    'Indian Institute of Engineering Science and Technology, Shibpur',
+    'Atal Bihari Vajpayee Indian Institute of Information Technology & Management Gwalior',
+    'Indian Institute of Information Technology (IIIT)Kota, Rajasthan',
+    'Indian Institute of Information Technology Guwahati',
+    'Indian Institute of Information Technology(IIIT) Kalyani, West Bengal',
+    'Indian Institute of Information Technology(IIIT) Kilohrad, Sonepat, Haryana',
+    'Indian Institute of Information Technology(IIIT) Una, Himachal Pradesh',
+    'Indian Institute of Information Technology(IIIT), Sri City, Chittoor District, Andra Pradesh',
+    'Indian Institute of Information Technology(IIIT), Vadodara, Gujrat',
+    'Indian Institute of Information Technology, Allahabad',
+    'Indian Institute of Information Technology, Design & Manufacturing, Kancheepuram',
+    'Pt. Dwarka Prasad Mishra Indian Institute of Information Technology, Design & Manufacture Jabalpur',
+    'Indian Institute of Information Technology Manipur',
+    'Indian Institute of Information Technology Srirangam, Tiruchirappalli',
+    'Indian Institute of Information Technology Lucknow',
+    'Indian Institute of Information Technology(IIIT) Dharwad',
+    'Indian Institute of Information Technology Design & Manufacturing Kurnool, Andhra Pradesh',
+    'Indian Institute of Information Technology(IIIT) Kottayam',
+    'Indian Institute of Information Technology (IIIT) Ranchi',
+    'Indian Institute of Information Technology (IIIT) Nagpur',
+    'Indian Institute of Information Technology (IIIT) Pune',
+    'Assam University, Silchar',
+    'Birla Institute of Technology, Mesra, Ranchi',
+    'Gurukula Kangri Vishwavidyalaya, Haridwar',
+    'Indian Institute of Carpet Technology, Bhadohi',
+    'Institute of Infrastructure, Technology, Research and Management-Ahmedabad',
+    'Institute of Technology, Guru Ghasidas Vishwavidyalaya (A Central University), Bilaspur, (C.G.)',
+    'J.K. Institute of Applied Physics & Technology, Department of Electronics & Communication, University of Allahabad- Allahabad',
+    'National Institute of Electronics and Information Technology, Aurangabad (Maharashtra)',
+    'National Institute of Foundry & Forge Technology, Hatia, Ranchi',
+    'Sant Longowal Institute of Engineering and Technology',
+    'Mizoram University, Aizawl',
+    'School of Engineering, Tezpur University, Napaam, Tezpur',
+    'School of Planning & Architecture, Bhopal',
+    'School of Planning & Architecture, New Delhi',
+    'School of Planning & Architecture: Vijayawada',
+    'Shri Mata Vaishno Devi University, Katra, Jammu & Kashmir',
+    'Indian Institute of Crop Processing Technology, Thanjavur, Tamilnadu'
+];
+var container = document.getElementById("rectangle-container");
+for (var i = 0; i < rectangleList.length; i++) {
+    // Create a new div element for each rectangle
+    var rectangle = document.createElement("div");
+    rectangle.className = "rectangle";
+
+    var contentDiv = document.createElement("div");
+    contentDiv.className = "rectangle-content";
+
+    var link = document.createElement("a");
+    link.className = "rectangle-link";
+    link.href = "#" + rectangleList[i].replace(/\s/g, "-");
+    link.textContent = rectangleList[i];
+
+    // Append the link to the content div
+    contentDiv.appendChild(link);
+
+    // Append the content div to the rectangle
+    rectangle.appendChild(contentDiv);
+
+    // Append the rectangle to the container
+    container.appendChild(rectangle);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header {
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .title {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+    
+    .subtitle {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .selectBox {
+        margin-bottom: 20px;
+    }
+    
+    .rectangle {
+        display: inline-block;
+        border: 1px solid #ccc;
+        margin-right: 20px;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .dropdown {
+        height: 40px;
+        width: 200px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    
+    .chart-container {
+        margin-top: 20px;
+    }
+    
+    .canvas-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 75%;
+    }
+    
+    .canvas-container canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        width: 250px;
+    }
+</style>
+<title>JoSAA</title>
+<script>
+function showYearDropdown(roundDropdown) {
+    var yearDropdown = document.getElementById("yearDropdown");
+
+    if (roundDropdown.value !== "") {
+        yearDropdown.style.display = "inline-block";
+    } else {
+        yearDropdown.style.display = "none";
+    }
+
+}
+
+
+function showInstituteDropdown(yearDropdown) {
+    
+    var instituteDropdown = document.getElementById("instituteDropdown");
+
+    if (yearDropdown.value !== "") {
+        instituteDropdown.style.display = "inline-block";
+    } else {
+        instituteDropdown.style.display = "none";
+    }
+    
+    
+}
+
+function showGenderDropdown(nameDropdown) {
+    const name = nameDropdown.value;
+    var genderDropdown = document.getElementById("genderDropdown");
+    var gender = document.getElementById("gender");
+
+    if (name !== "") {
+        genderDropdown.style.display = "inline-block";
+    } else {
+        genderDropdown.style.display = "none";
+    }
+    
+    gender.innerHTML = "";
+    var option = document.createElement("option");
+    option.value = "";
+    option.text = "Select Program";
+    option.style.fontSize = '20px';
+    gender.appendChild(option);
+    
+      const xhr = new XMLHttpRequest();
+      const url = `/get-institutewise-gender/?name=${name}`;
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const responseData = JSON.parse(xhr.responseText);
+              
+              for (var i = 0; i < responseData.length; i++) {
+                var option = document.createElement("option");
+                option.value = responseData[i]['Gender'];
+                option.text = responseData[i]['Gender'];
+                option.style.fontSize = '20px';
+                gender.appendChild(option);
+              }
+              
+              
+          }
+      };
+      xhr.send();
+}
+
+function showProgramtypeDropdown(instituteDropdown) {
+    const inst = instituteDropdown.value;
+    var programtypeDropdown = document.getElementById("programtype");
+    var disp = document.getElementById("programtypeDropdown");
+
+    if (instituteDropdown.value !== "") {
+        disp.style.display = "inline-block";
+    } else {
+        disp.style.display = "none";
+    }
+
+    programtypeDropdown.innerHTML = "";
+    var option = document.createElement("option");
+    option.value = "";
+    option.text = "Select Program";
+    option.style.fontSize = '20px';
+    programtype.appendChild(option);
+    
+      const xhr = new XMLHttpRequest();
+      const url = `/get-institutewise/?inst=${inst}`;
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const responseData = JSON.parse(xhr.responseText);
+              
+              
+              for (var i = 0; i < responseData.length; i++) {
+                var option = document.createElement("option");
+                option.value = responseData[i]['Program_type'];
+                option.text = responseData[i]['Program_type'];
+                option.style.fontSize = '20px';
+                programtypeDropdown.appendChild(option);
+              }
+              
+              
+          }
+      };
+      xhr.send();
+}
+function showProgramnameDropdown(programtypeDropdown) {
+    const type = programtypeDropdown.value;
+    const IIT = document.getElementById('institute');
+    const iit = IIT.value;
+    var programnameDropdown = document.getElementById("programname");
+    var disp = document.getElementById("programnameDropdown");
+    
+    if (programtypeDropdown.value !== "") {
+        disp.style.display = "inline-block";
+    } else {
+        disp.style.display = "none";
+    }
+    
+        programnameDropdown.innerHTML = "";
+        var option = document.createElement("option");
+        option.value = "";
+        option.text = "Select Program";
+        option.style.fontSize = '20px';
+        programnameDropdown.appendChild(option);
+        
+      const xhr = new XMLHttpRequest();
+      const url = `/get-institutewise-name/?type=${type}&iit=${iit}`;
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const responseData = JSON.parse(xhr.responseText);
+              
+              for (var i = 0; i < responseData.length; i++) {
+                var option = document.createElement("option");
+                option.value = responseData[i]['Program_name'];
+                option.text = responseData[i]['Program_name'];
+                option.style.fontSize = '20px';
+                programnameDropdown.appendChild(option);
+              }
+              
+              
+          }
+      };
+      xhr.send();
+  }
+
+</script>
+</head>
+<body style="background-color: lightgrey;">
+    <div class="header">
+        <h1 class="title">Welcome</h1>
+        <p class="subtitle">Here we analyze the Yearwise trend for every round</p>
+    </div>
+
+<div class="selectBox">
+    
+    <div class="card" id="instituteDropdown">
+        <label for="institute">Institute</label>
+        <select id="institute" name="Institute" class="dropdown" onchange="showProgramtypeDropdown(this)">
+            <option value="">Select an institute</option>
+            <option value="IITBhubaneswar">IIT Bhubaneshwar</option>
+            <option value="IITBombay">IIT Bombay</option>
+            <option value="IITMandi">IIT Mandi</option>
+            <option value="IITDelhi">IIT Delhi</option>
+            <option value="IITIndore">IIT Indore</option>
+            <option value="IITKharagpur">IIT Kharagpur</option>
+            <option value="IITHyderabad">IIT Hyderabad</option>
+            <option value="IITJodhpur">IIT Jodhpur</option>
+            <option value="IITKanpur">IIT Kanpur</option>
+            <option value="IITMadras">IIT Madras</option>
+            <option value="IITGandhinagar">IIT Gandhinagar</option>
+            <option value="IITPatna">IIT Patna</option>
+            <option value="IITRoorkee">IIT Roorkee</option>
+            <option value="IITDhanbad">IIT Dhanbad</option>
+            <option value="IITRopar">IIT Ropar</option>
+            <option value="IITGuwahati">IIT Guwahati</option>
+            <option value="IITBhilai">IIT Bhilai</option>
+            <option value="IITGoa">IIT Goa</option>
+            <option value="IITPalakkad">IIT Palakkad</option>
+            <option value="IITTirupati">IIT Tirupati</option>
+            <option value="IITJammu">IIT Jammu</option>
+            <option value="IITDharwad">IIT Dharwad</option>
+            <option value="IIT(BHU)Varanasi">IIT(BHU) Varanasi</option>
+        </select>
+    </div>
+    
+    <div class="card" id="programtypeDropdown" style="display: none;">
+        <label for="programtype">Program Type</label>
+        <br>
+        <select id="programtype" name="Programtype" class="dropdown" onchange="showProgramnameDropdown(this)">
+           
+        </select>
+    </div>
+    
+    <div class="card" id="programnameDropdown" style="display: none;">
+        <label for="programname">Program Name</label>
+        <br>
+        <select id="programname" name="Programname" class="dropdown" onchange="showGenderDropdown(this)">
+         
+        </select>
+
+    </div>
+    
+    <div class="card" id="genderDropdown" style="display: none;">
+    <label for="gender">Gender</label>
+    <br>
+    <select id="gender" name="Gender" class="dropdown">
+        
+    </select>
+    </div>
+    
+    <div>
+      <canvas id="myChart" width="300" height="500"></canvas>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    
+    <script>
+        let myChart = null;
+        
+      const genderval = document.getElementById('gender');
+      
+      const IIT = document.getElementById('institute');
+      console.log(IIT);
+      const Prog = document.getElementById('programtype');
+      const Prog_name = document.getElementById('programname');
+      genderval.addEventListener('change',selection);
+      function selection() {
+          
+          const IIT_val = IIT.value;
+          console.log(IIT_val);
+          const gen_val = genderval.value;
+          const prog_val = Prog.value;
+          const prog_name = Prog_name.value;
+          
+          updateGraph(IIT_val,gen_val,prog_val,prog_name)
+        };
+        
+        function updateGraph(iit , gender,programtype,programname) {
+            const xhr = new XMLHttpRequest();
+            const url = `/get-graph-data-yearwise/?iit=${iit}&gender=${gender}&programtype=${programtype}&programname=${programname}`;
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    const responseData = JSON.parse(xhr.responseText);
+                    console.log(responseData);
+                    renderGraph(responseData);
+                }
+            };
+            xhr.send();
+        }
+        
+        function renderGraph(data) {
+        
+            
+            
+            const labels = [1,2,3,4,5,6]; // Array to store labels
+            const values_y16 = []; 
+            const values_y17 = [];
+            const values_y18 = [];
+            const values_y19 = [];
+            const values_y20 = [];
+            const values_y21 = [];
+            const values_y22 = [];
+            const values_y23 = [];
+        
+            // Extract labels and values from the data
+            for (const item of data) {
+                
+                if(item.Year === 2016){
+                    values_y16.push(item.Closing_rank);
+                }else if(item.Year === 2017){
+                    values_y17.push(item.Closing_rank);
+                }else if(item.Year === 2018){
+                    values_y18.push(item.Closing_rank);
+                }else if(item.Year === 2019){
+                    values_y19.push(item.Closing_rank);
+                }else if(item.Year === 2020){
+                    values_y20.push(item.Closing_rank);
+                }else if(item.Year === 2021){
+                    values_y21.push(item.Closing_rank);
+                }else if(item.Year === 2022){
+                    values_y22.push(item.Closing_rank);
+                }else if(item.Year === 2023){
+                    values_y23.push(item.Closing_rank);
+                }
+                
+            }
+            
+            console.log("Values for 2023:", values_y23); // Add this line to log the values_y23 array
+             
+            
+        
+            
+               const ctx = document.getElementById('myChart').getContext('2d');
+               
+               if (myChart != null){
+                   myChart.destroy();
+               }
+               
+               myChart = new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                     labels: labels,
+                     datasets: [{
+                        label: '2016',
+                        data: values_y16,
+                        borderColor: 'blue',
+                        fill: false
+                     },
+                     {
+                        label: '2017',
+                        data: values_y17,
+                        borderColor: 'red',
+                        fill: false
+                     },
+                     {
+                        label: '2018',
+                        data: values_y18,
+                        borderColor: 'green',
+                        fill: false
+                     },
+                     {
+                        label: '2019',
+                        data: values_y19,
+                        borderColor: 'purple',
+                        fill: false
+                     },
+                     {
+                        label: '2020',
+                        data: values_y20,
+                        borderColor: 'orange',
+                        fill: false
+                     },
+                     {
+                        label: '2021',
+                        data: values_y21,
+                        borderColor: 'cyan',
+                        fill: false
+                     },
+                     {
+                        label: '2022',
+                        data: values_y22,
+                        borderColor: 'black',
+                        fill: false
+                     },
+                     {
+                        label: '2023',
+                        data: values_y23,
+                        borderColor: 'brown',
+                        fill: false
+                     }
+                     ]
+                  },
+                  options: {
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     scales: {
+                        x: {
+                           display: true,
+                           title: {
+                              display: true,
+                              text: 'Round',
+                              font:{
+                                  size: 18
+                              }
+                            },
+                            ticks:{
+                                font:{
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                           display: true,
+                           title: {
+                              display: true,
+                              text: 'Closing Rank',
+                              font:{
+                                  size: 18
+                              }
+                            },
+                            ticks:{
+                                font:{
+                                    size: 14
+                                }
+                            }
+                        }
+                     },
+                     plugins: {
+                        legend: {
+                           display: true,
+                           labels: {
+                              font: {
+                                 size: 14
+                              }
+                           }
+                        }
+                     },
+                     layout: {
+                        padding: {
+                           top: 20,
+                           right: 20,
+                           bottom: 20,
+                           left: 20
+                        }
+                     }
+                  }
+               });
+               
+               
+
+        }
+
+
+
+    </script>
+   
+    
+</div>
+
+</body>
+</html>
